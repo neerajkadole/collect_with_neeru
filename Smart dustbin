@@ -1,0 +1,211 @@
+#include <Servo.h>
+
+#include <LiquidCrystal.h>
+
+// Setting up LCD
+
+ 
+
+const int rs = 13, en = 12, d4 = 7, d5 = 6, d6 = 5, d7 = 4;
+
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+// Setting Values
+
+ 
+
+int moistValue = 0;
+
+ 
+
+int irValue = 0;
+
+// Indicate pins for Components
+
+ 
+
+int servoPin = 3;  // Servo
+
+int Rled = A1;     // Dry Garbage Red LED
+
+int Bled = A5;     // Wet Garbage Blue LED
+
+// Initiate Servo
+
+ 
+
+Servo servo1;
+
+ 
+
+void setup()
+
+{
+
+  pinMode(2, INPUT);
+
+  pinMode(A0, INPUT);
+
+  
+
+  pinMode(Rled, OUTPUT);
+
+  pinMode(Bled, OUTPUT);
+
+ 
+
+  
+
+ 
+
+  servo1.attach(servoPin); // Attaching the Servo
+
+ 
+
+  
+
+//-------------------------------LCD Starting------------------------------
+
+ 
+
+  lcd.begin(16, 2);     // LCD setup
+
+  lcd.setCursor(0, 0);
+
+    
+
+  lcd.print("Welcome to");
+
+  lcd.setCursor(0, 1);
+
+  lcd.print("our Project");
+
+  delay(2000);
+
+  lcd.clear();
+
+  lcd.print("Waste");
+
+  lcd.setCursor(0, 1);
+
+  lcd.print("Segregation");
+
+  delay(2000);
+
+  lcd.clear();
+
+  
+
+//-------------------------------LCD Credits-------------------------------
+
+  
+
+  lcd.print("By:");
+
+  lcd.setCursor(0, 1);
+
+  lcd.print("NEERAJ KADOLE");
+
+  delay(2000);
+
+  lcd.clear();
+
+  
+
+  lcd.print("AYUSH RAJ");
+
+  delay(2000);
+
+  lcd.clear();
+
+  
+
+  Serial.begin(9600);
+
+}
+
+ 
+
+void loop()
+
+{
+
+  irValue = digitalRead(2);
+
+  moistValue = analogRead(A0);
+
+  
+
+  servo1.write(90); // Rotate the servo 90 Deg
+
+ 
+
+if (irValue == 1)
+
+  {
+
+    Serial.println(moistValue);
+
+    lcd.clear();
+
+    lcd.setCursor(0, 0);
+
+    lcd.print("Moisture = ");
+
+    lcd.print(moistValue);
+
+    
+
+    delay(2000);
+
+    
+
+    if (moistValue > 500)
+
+    {
+
+      lcd.setCursor(0, 1);
+
+      lcd.print("Its Dry Garbage");
+
+      digitalWrite(Rled, HIGH);
+
+      servo1.write(120);
+
+      delay(3000);
+
+      digitalWrite(Rled, LOW);
+
+      lcd.clear();
+
+   
+
+    }
+
+    else
+
+    {
+
+      lcd.setCursor(0, 1);
+
+      lcd.print("Its Wet Garbage");
+
+      digitalWrite(Bled, HIGH);
+
+      servo1.write(60);
+
+      delay(3000);
+
+      digitalWrite(Bled, LOW);
+
+      lcd.clear();
+
+    }
+
+  }
+
+  
+
+}
+
+ 
